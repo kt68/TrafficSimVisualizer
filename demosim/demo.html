@@ -1,0 +1,1062 @@
+<html>
+<head>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" integrity="sha512-xodZBNTC5n17Xt2atTPuE1HxjVMSvLVW9ocqUKLsCC5CXdbqCmblAshOMAS6/keqq/sMZMZ19scR4PsZChSR7A==" crossorigin=""/>
+    <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"
+   integrity="sha512-XQoYMqMTK8LvdxXYG3nZ448hOEQiglfqkJs1NOQV44cWnUrBc8PkAOcXy20w0vlaXaVUearIOBhiXZ5V3ynxwA=="
+   crossorigin=""></script>
+    
+<style>
+    .car-div-icon {
+        background:orange;
+        border:1px solid black;
+        text-align:center;
+        border-radius:50%;
+        line-height:20px;
+        font-size:10px;
+        font-weight: bold;
+        }
+    .node-div-icon {
+        background:white;
+        border:1px solid black;
+        text-align: center;
+        border-radius:50%;
+        line-height:30px;
+        font-size:12px;
+        font-weight: bold;
+        color: green;
+       
+        }        
+    .speed-div-icon-green {
+        background:transparent;
+        border:3px solid green;
+        text-align: center;
+        border-radius:50%;
+        line-height:20px;
+        font-size:16px;
+        font-weight: bold;
+        color: green;
+       /* size: 60px;*/
+        }
+    .speed-div-icon-yellow {
+        background:transparent;
+        border:3px solid orange;
+        text-align: center;
+        border-radius:50%;
+        line-height:20px;
+        font-size:16px;
+        font-weight: bold;
+        color: orange;
+       /* size: 60px;*/
+        }
+   .speed-div-icon-red {
+    background:transparent;
+        border:3px solid red;
+        text-align: center;
+        border-radius:50%;
+        line-height:20px;
+        font-size:16px;
+        font-weight: bold;
+        color: red;
+        }
+    .density-div-icon {
+        background:transparent;
+        border:0px solid black;
+        text-align: right;
+        border-radius:50%;
+        line-height:15px;
+        font-size:15px;
+        font-weight: normal;
+        color: black;       
+        }
+    .head-div-icon {
+        background: black;
+        border:1px solid black;
+        border-radius:50%;  
+        }
+    .road-div-icon {
+        background:white;
+        border:1px solid black;
+        text-align: center;
+        border-radius:50%;
+        line-height:30px;
+        font-size:10px;
+        font-weight: bold;
+        color: black;
+       
+        }
+    .socket-div-icon {
+        background: yellow;
+        border:1px solid black;
+        text-align:center;
+        border-radius:50%;
+        line-height:20px;
+        font-size:10px;
+        font-weight: bold;
+         color: red;
+        }
+    .lane-div-icon {
+        background: yellow;
+        border:1px solid black;
+        text-align:center;
+        border-radius:50%;
+        line-height:20px;
+        font-size:10px;
+        font-weight: bold;
+        color: blue;
+        }
+    .time-div-icon {
+        background: grey;
+        border:1px solid black;
+        text-align:center;
+        border-radius:50%;
+        line-height:20px;
+        font-size:30px;
+        font-weight: bold;
+        }
+    .lamp-red-div-icon-1 {
+        background: red;
+        border:1px solid black;
+        text-align:center;        
+        border-radius:50%;
+        line-height:16px;
+        font-size:10px;
+        color: black;       
+        }
+    .lamp-red-div-icon-2 {
+        background: red;
+        border:2px solid black; 
+        text-align:center;       
+        border-radius:50%;
+        line-height:20px;
+        font-size:16px;
+        color: black;        
+        }
+    .lamp-red-div-icon-3 {
+        background: red;
+        border:3px solid black;
+        text-align:center;        
+        border-radius:50%;
+        line-height:30px;
+        font-size:24px;
+        color: black;        
+        }
+    .lamp-yellow-div-icon {
+        background: yellow;
+         border:1px solid black;        
+        border-radius:50%;
+        line-height:16px;
+        font-size:10px;
+        color: black;
+        }
+    .lamp-green-div-icon-1 {
+        background: green;
+        border:1px solid black; 
+        text-align:center;        
+        border-radius:50%;
+        line-height:16px;
+        font-size:10px;
+        color: black; 
+        }
+    .lamp-green-div-icon-2 {
+        background: green;
+        border:2px solid black; 
+        text-align:center;        
+        border-radius:50%;
+        line-height:20px;
+        font-size:16px;
+        color: black; 
+        }
+    .lamp-green-div-icon-3 {
+        background: green;
+        border:3px solid black; 
+        text-align:center;        
+        border-radius:50%;
+        line-height:30px;
+        font-size:24px;
+        color: black; 
+        }
+        
+        #mapid { height: 100%; }
+
+</style>
+</head>
+<body>
+<!-- <div id="mapid" style= height: 100%;"></div>  -->
+<div>
+    <div id="mapid" style="width: 100%; height: 95%"></div>
+    <div id="infobar" style="width:100%; height:5%;" >
+
+        <div id="nowtime" style="display: inline-block; vertical-align: top; font-family: arial; font-size: 26px; width: 25%; text-align: center;
+        background: lightgreen; border: groove;">
+            Left Side Menu
+        </div>
+
+        <div id="simulationtime" style="display: inline-block; vertical-align: top; font-family: arial; font-size: 26px; width: 25%; text-align: center;
+        background: lightgreen; border: groove;">
+            Random Content
+        </div>
+        
+        <div class = "forecast" id = "forecast" style="display: inline-block; vertical-align: top; font-family: arial; font-size: 26px; width: 20%; text-align: center;
+        background: lightgreen; border: groove;">
+            Forecast (15 min)
+        </div>
+
+        <div id="rightThing" style="display: inline-block; vertical-align: top; font-family: arial; font-size: 26px; width: 28%; color: lightgray; text-align: center;
+        background: darkgreen; border: groove;">
+            City-Eye-Simulator &#169
+        </div>
+    </div>
+    
+<!--     <div id="time" style="font-size: 40px"></div> -->
+</div>
+
+<script>
+  ///============================================================================================================= 
+   
+   var time_start = 25440;
+   var time = time_start;  // time in seconds
+  // var normal_continue_time = time;
+   var deltatime = 1000;
+   var number_of_120s_periods = 5;
+   
+   
+   var forecasting_mode = false;
+  
+    
+    var nodeicon_sw = false;
+    var roadicon_sw = false;
+    var laneicon_sw = true;
+    var nodelaneicon_sw = false;
+    var socketicon_sw = false;
+    var car_index_sw = false;
+    var lampiconsize = 10;
+  
+    var mymap = L.map('mapid').setView([46.895, 19.650], 15);
+
+	L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token=pk.eyJ1IjoibWFwYm94IiwiYSI6ImNpejY4NXVycTA2emYycXBndHRqcmZ3N3gifQ.rJcFIG214AriISLbB6B5aw', {
+		maxZoom: 20, minZoom: 15,
+		attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, ' +
+			'Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
+		id: 'mapbox/streets-v11',
+		tileSize: 512,
+		zoomOffset: -1
+	}).addTo(mymap);
+ 
+ //===========================================================
+ 
+   var road_even_lat_1 = [];  // lat-lon of the midde-plus of the even lane of road
+   var road_even_lon_1 = [];  
+   var road_even_lat0 = [];  // lat-lon of the midde of the even lane of road
+   var road_even_lon0 = [];  
+   var road_even_lat1 = [];  // lat-lon of the v= info icon for the even lane of road
+   var road_even_lon1 = [];
+
+   var road_odd_lat_1 = [];  // lat-lon of the middle-plus the odd lane of road
+   var road_odd_lon_1 = [];
+   var road_odd_lat0 = [];  // lat-lon of the middle of the odd lane of road
+   var road_odd_lon0 = []; 
+   var road_odd_lat1 = [];  // lat-lon of the v= info icon for the odd lane of road
+   var road_odd_lon1 = [];
+
+   var road_length = [];
+   var road_odd_number_of_lanes = [];
+   var road_even_number_of_lanes = [];
+   	   
+//===========================================================
+    function readMapLanes()
+    {
+      
+        var url = "lanesocketposGPS.txt";	    
+        var fileRequest = new XMLHttpRequest();	    
+        fileRequest.open("GET",url, true);	    
+        fileRequest.send();
+    
+        fileRequest.onreadystatechange = function()
+        {
+            
+            if (fileRequest.readyState == 4 && fileRequest.status == 200)
+            {
+                var lines = fileRequest.responseText.split('\n');
+                //var data = lines[1].split(' ');
+                
+                var lat0 =0;
+                var lon0 = 0;
+                var latlongs = 0;			
+                var laneLine = 0;
+                var m = 0;
+                var prevnode = -1;
+                
+                for(var i = 2; i < lines.length; i++)
+                {
+                    var d = lines[i].split(' ');
+                    
+  
+                    var roadnode = parseInt(d[1]);
+                    var lane = parseInt(d[2]);
+                    
+                    if (d[0] == "r" )
+                    {
+                        lat0 = parseFloat(d[3]); // for calculating mean velocities of cars on each road
+                        lon0 = parseFloat(d[4]);
+                        var latend = parseFloat(d[d.length-2]); // for calculating mean velocities of cars on each road
+                        var lonend = parseFloat(d[d.length-1]);
+                        road_length[roadnode] = Math.abs(lat0-latend)*111000 + Math.abs(lon0-lonend)*76000;
+                        var nx = (lonend-lon0); //*0.9;
+                        var ny = latend-lat0;
+                        
+                        var norm = Math.sqrt(nx*nx +ny*ny);
+                         
+                        nx /= norm; ny /= norm;
+
+                        if (lane%2==0)  
+                        {
+                            if (road_even_number_of_lanes[roadnode] == undefined) road_even_number_of_lanes[roadnode] = 0;
+                            road_even_lat0[roadnode] = (lat0 + latend) / 2;
+                            road_even_lon0[roadnode] = (lon0 + lonend) / 2;
+                            road_even_lat1[roadnode] = (lat0 + latend) / 2 - nx*0.0003 + ny*0.0003;
+                            road_even_lon1[roadnode] = (lon0 + lonend) / 2 + ny*0.0003  + nx*0.0003;
+                            road_even_lat_1[roadnode] = (lat0 + latend) / 2 + ny*0.0001;
+                            road_even_lon_1[roadnode] = (lon0 + lonend) / 2 + nx*0.0001;
+                            road_even_number_of_lanes[roadnode] += 1;
+
+                        }else
+                        {
+                            if (road_odd_number_of_lanes[roadnode] == undefined) road_odd_number_of_lanes[roadnode] = 0;
+                            road_odd_lat0[roadnode] = (lat0 + latend) / 2;
+                            road_odd_lon0[roadnode] = (lon0 + lonend) / 2;
+                            road_odd_lat1[roadnode] = (lat0 + latend) / 2 - nx*0.0003  + ny*0.0003;
+                            road_odd_lon1[roadnode] = (lon0 + lonend) / 2 + ny*0.0003  + nx*0.0003;
+                            road_odd_lat_1[roadnode] = (lat0 + latend) / 2 + ny*0.0001;
+                            road_odd_lon_1[roadnode] = (lon0 + lonend) / 2 + nx*0.0001;
+                            road_odd_number_of_lanes[roadnode] += 1;
+                        }
+                     
+      
+                        for (m = 3; m < d.length-1; m= m+2)
+                        {
+                            lat0 = parseFloat(d[m]);
+                            lon0 = parseFloat(d[m+1]);
+        
+                            if(m == 3 && lane == 0 && roadicon_sw)
+                            {
+                                var divicon =new  L.divIcon({className: "road-div-icon",  html: roadnode, color: 'black', iconSize: [1, 1]});
+                                var lanesign = L.marker(new L.LatLng(lat0, lon0), {icon: divicon });
+                                lanesign.addTo(mymap);                    
+                            }
+                            
+                            if (m >=4 && laneicon_sw)
+                            {
+                                //lanesLength[index][m/2-2] =  Math.sqrt((xPrev-x0)*(xPrev-x0)+(yPrev-y0)*(yPrev-y0)) ;
+                                latlongs = [[latPrev, lonPrev], [lat0, lon0]];
+                                laneLine = L.polyline( latlongs , {color: 'blue', weight: 1, opacity: 0.4});//L.polyline([[lanesLat0[index], lanesLon0[index]],[lanesLat1[index], lanesLon1[index]]], {color: 'blue'});
+                                laneLine.addTo(mymap);
+                            
+                            }
+                            
+                            latPrev = lat0;
+                            lonPrev = lon0;
+                        
+                        }
+                        
+                    }
+                    if (d[0] == "n" )
+                    {
+                        
+                        for (m = 3; m < d.length-1; m= m+2)
+                        {
+                            lat0 = parseFloat(d[m]);
+                            lon0 = parseFloat(d[m+1]);
+                            
+                            if(m == 3 && roadnode != prevnode && nodeicon_sw)
+                            {
+                                var divicon2 =new  L.divIcon({className: "node-div-icon",  html: roadnode, iconSize: [6, 6]});
+                                var lanesign2 = L.marker(new L.LatLng(lat0, lon0), {icon: divicon2 });
+                                lanesign2.addTo(mymap);
+                                prevnode = roadnode;
+                                
+                            }
+                            
+                            if( (m == 9 || (d.length < 9 && m==3 )) && nodelaneicon_sw)
+                            {
+                                var divicon3 =new  L.divIcon({className: "lane-div-icon",  html: lane, iconSize: [1, 1]});
+                                var lanesign3 = L.marker(new L.LatLng(lat0, lon0), {icon: divicon3 });
+                                lanesign3.addTo(mymap);
+                                
+                            }
+                            
+                            if (m >=4  && laneicon_sw)
+                            {
+                                //lanesLength[index][m/2-2] =  Math.sqrt((xPrev-x0)*(xPrev-x0)+(yPrev-y0)*(yPrev-y0)) ;
+                                latlongs = [[latPrev, lonPrev], [lat0, lon0]];
+                                laneLine = L.polyline( latlongs , {color: 'blue', weight: 1, opacity: 0.4});//L.polyline([[lanesLat0[index], lanesLon0[index]],[lanesLat1[index], lanesLon1[index]]], {color: 'blue'});
+                                laneLine.addTo(mymap);
+                            
+                            }
+                            
+                            latPrev = lat0;
+                            lonPrev = lon0;
+                        
+                        }
+                        
+                    }
+                    
+                    if (d[0] == "s" &&  socketicon_sw)
+                    {
+                        lat0 = parseFloat(d[2]);
+                        lon0 = parseFloat(d[3]);                
+                        var divicon4 =new  L.divIcon({className: "socket-div-icon",   html: roadnode, iconSize: [6,6]});
+                        var lanesign4 = L.marker(new L.LatLng(lat0, lon0), {icon: divicon4 });
+                        lanesign4.addTo(mymap);                
+                        
+                    }
+                    
+                
+                }
+                
+            }
+            
+            
+        };
+        
+        
+    }
+    
+//==========================================================
+    
+    var carPosLat = [];
+    var carPosLon = [];
+    var road_even_velocity = [];  
+    var road_odd_velocity = [];
+    var road_even_carnumber = [];
+    var road_odd_carnumber = [];
+    
+//======================================================================  
+    function readCarPosHistory(time0)
+    {
+      
+      for (var i = 0; i <= 120; i++) 
+      {
+         road_even_velocity[i] = [];  
+         road_odd_velocity[i] = [];
+         road_even_carnumber[i] = [];
+         road_odd_carnumber[i] = [];
+         for (var j = 0; j < 500; j++)
+         {
+            road_even_velocity[i][j] = 0;  
+            road_odd_velocity[i][j] = 0;
+            road_even_carnumber[i][j] = 0;
+            road_odd_carnumber[i][j] = 0;
+         }
+      }
+      
+        
+	    var url = "carposhistory_" + time0.toString() + ".txt";	    
+	    var fileRequest = new XMLHttpRequest();	    
+	    fileRequest.open("GET",url, true);	    
+	    fileRequest.send();
+        console.log(url);
+	    
+	    fileRequest.onreadystatechange = function()
+       {
+		
+            if (fileRequest.readyState == 4 && fileRequest.status == 200)
+            {               
+                var lines = fileRequest.responseText.split('\n');
+                console.log('lines:  ' + lines.length);
+                //var t0 = parseInt(lines[0].substring(1));
+                var sec = 0;
+                for(var i = 1; i < lines.length; i++)
+                {			
+                    var d = lines[i].split(' ');
+                    if(d.length == 1 && d[0].charAt(0) == 's')
+                    {
+                        sec = parseInt(d[0].substring(1));
+                        
+                        carPosLat[sec]= [];
+                        carPosLon[sec] = [];
+                       // road_0_velocity[sec] = [];
+                       // road_1_velocity[sec] = [];
+                       // road_0_carnumber[sec] = [];
+                       // road_1_carnumber[sec] = [];
+                    }
+                    else
+                    {
+                        var id = parseInt(d[0]);
+                        var lat = parseFloat(d[1]);
+                        var lon = parseFloat(d[2]);
+                        var road = parseInt(d[3]);
+                        var lane = parseInt(d[4]);
+                        var velocity = parseFloat(d[5]);
+                
+                        carPosLat[sec][id] = lat;
+                        carPosLon[sec][id] = lon;
+                        if(road > 0 && lane >= 0 )
+                        {
+                        
+                            if (lane%2==0)
+                            {                                                        
+                                road_even_velocity[sec][road] += velocity;
+                                road_even_carnumber[sec][road]++;
+                            
+                            }else
+                            {                          
+                                road_odd_velocity[sec][road] += velocity;
+                                road_odd_carnumber[sec][road]++;
+                            }
+                        }   
+                        
+                        
+                    }		    
+                                                
+                }
+                
+                // get mean velocities
+                
+                for (var isec0 = 0; isec0 < road_even_velocity.length; isec0++)
+                {
+                  
+                   // if ( typeof(road_0_velocity[isec0]) == 'undefined') continue;
+                    for (var iroad0 = 0; iroad0< road_even_velocity[isec0].length; iroad0++)
+                    {
+                     
+                        //if(typeof(road_0_velocity[isec0][iroad0]) === 'undefined') continue;
+                        if(road_even_carnumber[isec0][iroad0] > 0)
+                        {
+                           road_even_velocity[isec0][iroad0] /= road_even_carnumber[isec0][iroad0];
+                           
+                        }
+                        
+                    }
+                }
+                for ( var isec1 = 0; isec1 < road_odd_velocity.length; isec1++)
+                {
+                   // if ( typeof(road_1_velocity[isec0]) == 'undefined') continue;
+                    for (var iroad1 = 0; iroad1< road_odd_velocity[isec1].length; iroad1++)
+                    {
+                        //if(typeof(road_1_velocity[isec1][iroad1]) === 'undefined') continue;
+                        if(road_odd_carnumber[isec1][iroad1] > 0)
+                        {
+                           road_odd_velocity[isec1][iroad1] /= road_odd_carnumber[isec1][iroad1];
+                        }
+                    }
+                }
+                
+            }
+            
+        };
+        
+        
+         
+        
+	}
+	
+//===========================================================
+    
+    var lampsLat = [];
+    var lampsLon = [];
+    var lampsLat2 = [];
+    var lampsLon2 = [];
+//===========================================================    
+    function readLampPositions()
+    {
+	    var url = "lamppositions.txt";	    
+	    var fileRequest = new XMLHttpRequest();	    
+	    fileRequest.open("GET",url, true);	    
+	    fileRequest.send();
+	    
+	    fileRequest.onreadystatechange = function()
+        {
+		
+            if (fileRequest.readyState == 4 && fileRequest.status == 200)
+            {               
+                var lines = fileRequest.responseText.split('\n');		    
+            
+                for(var i = 0; i < lines.length-1; i++)
+                {			
+                    var d = lines[i].split(' ');                    
+                    var id = parseInt(d[1]);
+                    if(d.length == 10)
+                    {
+                        lampsLat[id]= parseFloat(d[8]);
+                        lampsLon[id] = parseFloat(d[9]);
+                        lampsLat2[id]= -1;
+                        lampsLon2[id] = -1;
+                    }
+                   if(d.length == 12)
+                    {
+                        lampsLat[id]= parseFloat(d[8]);
+                        lampsLon[id] = parseFloat(d[9]);
+                        lampsLat2[id]= parseFloat(d[10]);
+                        lampsLon2[id] = parseFloat(d[11]);
+                        
+                    }                                                
+                }		    		    
+            }
+            
+        };       
+	}
+    
+ //===========================================================   
+    var lampStates = [];
+    var lampCounts = [];
+  //===========================================================      
+    function readLampStateHistory(time0)
+    {
+	    var url = "lampstatehistory" + time0.toString() + ".txt";	  	    
+	    var fileRequest = new XMLHttpRequest();	    
+	    fileRequest.open("GET",url, true);	    
+	    fileRequest.send();
+	    
+	    fileRequest.onreadystatechange = function()
+        {
+		
+            if (fileRequest.readyState == 4 && fileRequest.status == 200)
+            {               
+                var lines = fileRequest.responseText.split('\n');		    
+               // var t0 = parseInt(lines[0].substring(1));
+                var sec = 0;
+                for(var i = 1; i < lines.length; i++)
+                {			
+                    var d = lines[i].split(' ');
+                    if(d.length == 1 && d[0].charAt(0) == 's')
+                    {
+                        sec = parseInt(d[0].substring(1));
+                        
+                        lampStates[sec]= [];
+                        lampCounts[sec]= [];
+                    }
+                    else
+                    {
+                        var id = parseInt(d[0]);
+                        var state = d[1];
+                        var count = parseInt(d[2]);
+                        lampStates[sec][id] = state;
+                        lampCounts[sec][id] = count;
+                    }		    
+                                                
+                }		    		    
+            }
+            
+        };       
+        
+	}
+    
+//===================================================================
+	
+	function drawCars(isec)
+    {	
+		    carsLayer.remove(mymap);
+		    carsLayer.clearLayers();
+          
+         // console.log("cars!!!" + isec + " " + 0 + " " +typeof(carPosLat[isec][0]));
+         
+            
+		    for(var i = 0; i < carPosLat[isec].length; i++)
+		    {
+                if(typeof(carPosLat[isec][i]) == 'undefined') continue;
+                
+                var lat = carPosLat[isec][i];
+                var lon = carPosLon[isec][i];
+                
+                var divicon;
+                if (car_index_sw)
+                {// With car indexes
+                   divicon =new  L.divIcon({className: "car-div-icon",  html: i,iconSize: [6, 6]});
+                }else
+                { // Without car indexes
+                   divicon =new  L.divIcon({className: "car-div-icon",  iconSize: [6, 6]});
+                }
+               
+               var car = L.marker(new L.LatLng(lat, lon), {icon: divicon });
+               //var car = L.polygon(latlon, {color: 'red', weight: 6, opacity: 0.4});
+            			    				
+			      car.addTo(carsLayer);               
+			    			    			
+		    }
+		    
+		    carsLayer.addTo(mymap);
+            
+            //var timedivicon =new  L.divIcon({className: "time-div-icon",  html: isec, iconSize: [4, 4]});
+                    
+            //var timemarker = L.marker(new L.LatLng(46.905, 19.650), {icon: timedivicon });	
+            //var timemarker = L.marker(new L.LatLng(46.906298, 19.649952), {icon: timedivicon });
+            //timemarker.addTo(carsLayer);
+		    		
+	}
+   
+//===================================================================
+   
+   function drawVelocities(isec)
+    {
+        speed_icon_size = 4;
+
+        velocitiesLayer.remove(mymap);
+        velocitiesLayer.clearLayers();   
+
+        // if (typeof(road_0_velocity[isec]) === 'undefined') return;
+
+        var road, lat, lon, divicon, velocity, velocity_marker;
+        for(road = 0; road < road_even_velocity[isec].length; road++)
+        {             
+                // if(typeof(road_even_velocity[isec][road])=== 'undefined') continue;
+                if(typeof(road_even_lat1[road])== 'undefined') continue;
+            
+                if (road_even_carnumber[isec][road] == 0 ) continue;
+                if (road_length[road] < 30) continue;
+            
+                lat = road_even_lat1[road];
+                lon = road_even_lon1[road];
+                lat0 = road_even_lat0[road];
+                lon0 = road_even_lon0[road];
+                lat_1 = road_even_lat_1[road];
+                lon_1 = road_even_lon_1[road];
+
+                velocity = road_even_velocity[isec][road]*3.6;
+                if (road_even_number_of_lanes[road] == 0 || road_even_number_of_lanes[road] == undefined) road_even_number_of_lanes[road]=1;
+                density = road_even_carnumber[isec][road]*4.25/road_even_number_of_lanes[road]/road_length[road];
+                
+                if (velocity > 39)
+                divicon =new  L.divIcon({className: "speed-div-icon-green", iconSize: [speed_icon_size, speed_icon_size]});  
+                else if (velocity > 25)
+                    divicon =new  L.divIcon({className: "speed-div-icon-yellow",  iconSize: [speed_icon_size, speed_icon_size]}); 
+                else  divicon =new  L.divIcon({className: "speed-div-icon-red" , iconSize: [speed_icon_size, speed_icon_size]});           
+             
+                
+                density_divicon =new  L.divIcon({className: "density-div-icon", html: 'v='+velocity.toFixed(0) + '\n'+density.toFixed(2),
+                                         iconSize: [1, 1]});
+                head_divicon = new  L.divIcon({className: "head-div-icon", iconSize: [3, 3]});
+
+                velocity_marker = L.marker(new L.LatLng(road_even_lat1[road], road_even_lon1[road]), {icon: divicon });
+                density_marker = L.marker(new L.LatLng(lat, lon + 0.0001), {icon: density_divicon });
+                head_marker = L.marker(new L.LatLng(lat_1, lon_1), {icon: head_divicon });
+
+                marker_line = L.polyline([ [lat_1, lon_1], [lat0, lon0], [lat, lon] ],
+                            {color: 'black', weight: 1.5, opacity: 0.5});
+                                        
+                marker_line.addTo(velocitiesLayer);
+                velocity_marker.addTo(velocitiesLayer);
+                density_marker.addTo(velocitiesLayer);
+                head_marker.addTo(velocitiesLayer);                   
+                                        
+        }
+    
+        for(road = 0; road < road_odd_velocity[isec].length; road++)
+        {          
+            
+                // if(typeof(road_odd_velocity[isec][road])=== 'undefined') continue;
+            if(typeof(road_odd_lat1[road])== 'undefined') continue;
+            
+            //if (road_odd_carnumber[isec][road] == undefined) continue;
+            if (road_odd_carnumber[isec][road] == 0 ) continue;
+            if (road_length[road] < 30) continue;
+            
+            lat = road_odd_lat1[road];
+            lon = road_odd_lon1[road];
+            lat0 = road_odd_lat0[road];
+            lon0 = road_odd_lon0[road];
+            lat_1 = road_odd_lat_1[road];
+            lon_1 = road_odd_lon_1[road];
+
+            velocity = road_odd_velocity[isec][road]*3.6;
+            if (road_odd_number_of_lanes[road] == 0 || road_odd_number_of_lanes[road] == undefined) road_odd_number_of_lanes[road]=1;
+            density = road_odd_carnumber[isec][road]*4.25/road_odd_number_of_lanes[road]/road_length[road];
+            
+            if (velocity > 39)
+                divicon =new  L.divIcon({className: "speed-div-icon-green", iconSize: [speed_icon_size, speed_icon_size]});  
+            else if (velocity > 25)
+                divicon =new  L.divIcon({className: "speed-div-icon-yellow" , iconSize: [speed_icon_size, speed_icon_size]}); 
+            else  divicon =new  L.divIcon({className: "speed-div-icon-red" , iconSize: [speed_icon_size, speed_icon_size]});                 
+            
+            
+            
+            density_divicon =new  L.divIcon({className: "density-div-icon", html: 'v='+velocity.toFixed(0) + '\n'+density.toFixed(2),
+                             iconSize: [1, 1]});
+            head_divicon =new  L.divIcon({className: "head-div-icon", iconSize: [3, 3]});
+            
+            velocity_marker = L.marker(new L.LatLng(road_odd_lat1[road],  road_odd_lon1[road]), {icon: divicon });
+            density_marker = L.marker(new L.LatLng(lat  , lon + 0.0001), {icon: density_divicon });
+            head_marker = L.marker(new L.LatLng(lat_1, lon_1), {icon: head_divicon });
+
+            marker_line = L.polyline([[lat_1, lon_1], [lat0, lon0], [lat, lon] ],
+                            {color: 'black', weight: 1.5, opacity: 0.5});
+                                    
+            marker_line.addTo(velocitiesLayer);
+            velocity_marker.addTo(velocitiesLayer); 
+            density_marker.addTo(velocitiesLayer);  
+            head_marker.addTo(velocitiesLayer); 
+            
+            
+                                    
+        }
+        
+        velocitiesLayer.addTo(mymap);
+         
+		    		
+	}
+    
+//===================================================================
+	
+	function drawLampStates(isec)
+    {	
+		    lampsLayer.remove(mymap);
+		    lampsLayer.clearLayers();
+		    
+		    for(var i = 0; i < lampStates[isec].length; i++)
+		    {
+                
+                if(lampsLat2[i] == -1)
+                {
+                    var state = lampStates[isec][i];
+                    var cnt = lampCounts[isec][i];
+                    var divicon;
+                    var colorclass = "lamp-yellow-div-icon";
+                    switch(state[0])
+                    {
+                        case 'R': if (lampiconsize < 20) colorclass = "lamp-red-div-icon-1";
+                                    else if (lampiconsize < 30) colorclass = "lamp-red-div-icon-2";
+                                    else colorclass = "lamp-red-div-icon-3"; break;
+                        case 'Y': colorclass = "lamp-yellow-div-icon"; break;
+                        case 'G': if (lampiconsize < 20) colorclass = "lamp-green-div-icon-1";
+                                    else if (lampiconsize < 30) colorclass = "lamp-green-div-icon-2";
+                                    else colorclass = "lamp-green-div-icon-3"; break;
+                    }
+                    var cntLabel = "";
+                    if(cnt > -1) cntLabel = "  " + cnt.toString();
+                    
+                    //divicon =new  L.divIcon({className: colorclass,  html: cntLabel,  iconSize: [lampiconsize, lampiconsize]});
+                    divicon =new  L.divIcon({className: colorclass,    iconSize: [lampiconsize, lampiconsize]});
+                    
+                    var lamp = L.marker(new L.LatLng(lampsLat[i], lampsLon[i]), {icon: divicon });			    				
+                    lamp.addTo(lampsLayer);   
+                }
+                if(lampsLat2[i] > -1)
+                {
+                    var state2 = lampStates[isec][i];
+                    if(state2[0] == 'G' )
+                    {
+                        var cnt2 = lampCounts[isec][i];
+                    
+                        var cntLabel2 = "";
+                        if(cnt2 > -1) cntLabel2 = cnt2.toString();
+                        
+                        latlongs = [[lampsLat[i], lampsLon[i]], [lampsLat2[i], lampsLon2[i]]];
+                        line2 = L.polyline( latlongs , {color: 'green', weight: 4, opacity: 0.4});
+                                                    
+                        line2.addTo(lampsLayer);   
+                    }
+                    
+                }
+		    }
+
+            lampsLayer.addTo(mymap);
+
+           /* 
+            var timedivicon =new  L.divIcon({className: "time-div-icon",  html: isec, iconSize: [1, 1]});
+                    
+            var timemarker = L.marker(new L.LatLng(46.897000, 19.662700), {icon: timedivicon });			    				
+            timemarker.addTo(lampsLayer);   
+		   */ 
+		    
+		    		
+	}
+    
+ //===================================================================   
+    function drawGrid()
+    {
+        var lat0 = 46.893500; // 46.893500; 46.895500 szobonyai
+        var lon0 = 19.661500;  //19.661500; 19.666000
+		    
+		    for(var i = -10; i < 50; i++)
+		    {
+                
+                for(var j = -20; j < 60; j++)
+                {
+                    var lat = lat0 + i*0.000100;
+                    var lon = lon0 + j*0.000100;
+                   
+                   var latposlabel = 35 + i;
+                   var lonposlabel = 15 + j;
+                   
+                    var posLabel = latposlabel.toString() + "\n" + lonposlabel.toString();
+                    
+                    var divicon =new  L.divIcon({className: "lane-div-icon",  html: posLabel, iconSize: [1, 1]});
+                    
+                    var dot = L.marker(new L.LatLng(lat, lon), {icon: divicon });			    				
+                    dot.addTo(gridLayer);   
+                }               
+		    }
+		    
+		    gridLayer.addTo(mymap);
+		    		
+	}
+    
+//===================================================================
+	
+	function drawFrame()
+    {
+        var x0 = 4650;
+        var y0 = 6140;
+        var x1 = 5650;
+        var y1 = 7140;
+        var lat0 = 46.85 + y0 / 111169.0;
+        var lon0 = 19.61 + x0 / 76268.56; 
+        var lat1 = 46.85 + y1 / 111169.0;
+        var lon1 = 19.61 + x1 / 76268.56;
+        
+        var side1 =  [ [lat0, lon0], [lat0, lon1]];
+        var side2 =  [ [lat0, lon1], [lat1, lon1]];
+        var side3 =  [ [lat1, lon1], [lat1, lon0]];
+        var side4 =  [ [lat1, lon0], [lat0, lon0]];
+        var rectline1 = L.polyline( side1,  {color: 'blue', weight: 1, opacity: 0.4});
+        var rectline2 = L.polyline( side2,  {color: 'blue', weight: 1, opacity: 0.4});
+        var rectline3 = L.polyline( side3,  {color: 'blue', weight: 1, opacity: 0.4});
+        var rectline4 = L.polyline( side4, {color: 'blue', weight: 1, opacity: 0.4});
+        rectline1.addTo(mymap);
+        rectline2.addTo(mymap);
+        rectline3.addTo(mymap);
+        rectline4.addTo(mymap);
+    }
+	
+ //=====================================================================
+ //=====================================================================
+    //drawFrame();
+    
+    readMapLanes();	
+    readLampPositions();
+     
+    var carsLayer =  L.layerGroup([]);
+    var lampsLayer =  L.layerGroup([]);
+    var gridLayer =  L.layerGroup([]);
+    var velocitiesLayer =  L.layerGroup([]);
+	
+	 carsLayer.addTo(mymap);
+    lampsLayer.addTo(mymap);
+    velocitiesLayer.addTo(mymap);
+    
+	
+	 
+    // drawGrid();
+    
+	var i = 1;
+   var period = 0;
+    
+    readCarPosHistory(time_start + period*120);
+    
+    readLampStateHistory(time_start + period*120);
+    
+    var steppinginterval = setInterval( stepOne, deltatime);
+    
+//=======================================================================	   
+	function stepOne()
+	{
+        
+	   drawCars(i);
+      
+      drawVelocities(i);
+     
+      drawLampStates(i);
+      refreshSimulationTime();
+      time++;
+      i++;
+      if (i > 119 )//119)
+      {
+          period++;
+          readCarPosHistory(time_start + period*120);
+          readLampStateHistory(time_start + period*120);
+          i = 1;
+          if(period > number_of_120s_periods)// 5)
+          {
+              clearInterval(steppinginterval);
+          }
+      }
+   
+	}
+
+    // Resizing on zoom
+    /*
+mymap.on('zoomend', function() {
+
+var newzoom = '' + (20*(mymap.getZoom()+2)) +'px';
+$('#mymap .lamp-red-div-icon').css({'width':newzoom,'height':newzoom,'background-size':newzoom + ' ' + newzoom}); 
+
+});
+*/
+
+//==================================================================================
+
+mymap.on('zoomend', function(){
+    //var presentzoom = mymap.getZoom();
+    //if (presentzoom < 15) lampiconsize = 10;
+    //else if (presentzoom > 20) lampiconsize = 40;
+    //else lampiconsize = 10 + (presentzoom-15)*6;
+
+    drawLampStates(i);
+    
+    //console.log('size: ' + lampiconsize + ' presentzoom: ' + presentzoom);
+
+});
+//==================================================================================
+function twoDigits(i) {
+  if (i < 10) {
+    i = "0" + i;
+  }
+  return i;
+}
+//=======================================================================================
+function startTime() {
+  var today = new Date();
+  var h = today.getHours();
+  var m = today.getMinutes();
+  var s = today.getSeconds();
+  // add a zero in front of numbers<10
+  m = twoDigits(m);
+  s = twoDigits(s);
+  document.getElementById('nowtime').innerHTML = "Time: "+h + ":" + m + ":" + s;
+  t = setTimeout(function() {
+    startTime();
+  }, 500);
+}
+startTime();
+//=================================================================================
+function refreshSimulationTime() {
+  var h = twoDigits(Math.floor(time/3600));
+  var sec_afterhour = time%3600;
+  var m = twoDigits(Math.floor(sec_afterhour/60));
+  var s = twoDigits(sec_afterhour - 60*m);
+  document.getElementById('simulationtime').innerHTML = "Simulation-time: "+h + ":" + m + ":" + s;  
+}
+
+
+document.getElementsByClassName('forecast')[0]
+        .addEventListener('click', function () {
+            if (!forecasting_mode)
+            {
+               document.getElementsByClassName('forecast')[0].innerHTML = "Stop";
+               //normal_continue_time = time;
+               clearInterval(steppinginterval);
+               steppinginterval = setInterval( stepOne, 50);
+               forecasting_mode = true;              
+            }else
+            {
+               document.getElementsByClassName('forecast')[0].innerHTML = "Forecast (15 min)";
+               //time = normal_continue_time;
+               clearInterval(steppinginterval);
+               steppinginterval = setInterval( stepOne, deltatime);
+               forecasting_mode = false;             
+            }
+        });
+	
+	
+	
+	
+	//circle.bindPopup("<span style='color:green'>I am a standalone popup.</span><br><span style='color:red'>This is my test</span><br><span style='color:yellow'>for multiple rows.</span>");
+	/*
+	var popup = L.popup()
+		.setLatLng([46.894311, 19.662473])
+		.setContent("I am a standalone popup.<br>This is my test<br>for multiple rows.")
+		.openOn(mymap);
+	*/
+</script>
+</div>
+</body>
+</html>

@@ -1,0 +1,5 @@
+Lat0 Lon0 LatDegreeInMeters LonDegreeInMeters
+46.85
+19.61
+111169.0
+76268.56
